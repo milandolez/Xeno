@@ -24,8 +24,8 @@ ir <- raster("IR_dorsal transparent.png")
 #get values from the raster of xeno points
 scale<-extract(ir, tpoints@coords)
 
-temp_coord <- data.frame(tpoints@coords[1,],
-                      tpoints@coords[2,],
+temp_coord <- data.frame(tpoints@coords[,1],
+                      tpoints@coords[,2],
                         scale)
 
 #translate values to temperature
