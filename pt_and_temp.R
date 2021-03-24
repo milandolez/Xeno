@@ -39,17 +39,15 @@ points(x2[260:262], y2[260:262], col="red", pch=16) #anchor points on thermal im
 #get values from the raster of xeno points
 scale<-extract(ir, x2, y2)
 
-temp_coord <- data.frame(tpoints@coords[,1],
-                      tpoints@coords[,2],
+temp_coord <- data.frame(x2,
+                      y2,
                         scale)
 #> head(temp_coord)
-#tpoints.coords...1. tpoints.coords...2. scale
-#1            564.2781            80.38176   255
-#2            591.0000            78.00000   255
-#3            537.0000           454.00000   255
-#4             30.0000           444.00000   255
-#5            507.7976           110.18031   255
-#6            528.5589            92.63845   255
+#x2          y2 scale
+#1    296.98849   246.45326   255
+#2    311.05263   247.56579   255
+#3    282.63158    71.93421   255
+#4     15.78947    76.60526   255
 
 #hmm... they are all 255
 
