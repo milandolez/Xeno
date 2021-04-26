@@ -9,8 +9,11 @@
 #4         176    33.09091
 #5         159    32.25455
 #6         140    31.41818
+library(rgdal)
+
 
 library(raster)
+
 ir <- raster("IR_dorsal transparent.JPG")
 
 load("tpoints.RData")  
@@ -31,26 +34,30 @@ rescale_y <- function(x, oldmax, newmax) {newmax - ((x-0)/(oldmax - 0) * newmax)
 x2 <- rescale_x(tp[,1], 912, 480)
 y2 <- rescale_y(tp[,2], 608, 284)
 
-plot(ir)
+plot(ir, col=gray.colors(10, start = 0.3, end = 0.9, gamma = 2.2, alpha = NULL))
 points(x2, y2)
 points(x2[260:262], y2[260:262], col="red", pch=16) #anchor points on thermal image
 
 
 #get values from the raster of xeno points
-scale<-extract(ir, x2, y2)
+scaled_points <- SpatialPoints(coords=cbind(x2, y2))
+scale <- extract(ir, scaled_points)
 
 temp_coord <- data.frame(x2,
                       y2,
                         scale)
-#> head(temp_coord)
-#x2          y2 scale
-#1    296.98849   246.45326   255
-#2    311.05263   247.56579   255
-#3    282.63158    71.93421   255
-#4     15.78947    76.60526   255
 
-#hmm... they are all 255
+#translate color values to temperature using the key 
 
-#translate color values to temperature using the key (still working on this)
+#translate scale values that are one away from scale values in the key
 
-temp_coord$temperature <- ifelse(temp_coord$scale[i]==key$scalevalues, key$temperature, NA)
+for (i in 1:nrow(temp_coord)) {
+  j<- which(grepl(temp_coord$scale[i]-1,key$scalevalues))
+  temp_coord$temperature[i] <- ifelse(length(j)!=0,key$temperature[j], NA)
+}
+
+#head(temp_coord)
+#        x2        y2 scale      temperature
+#1 296.98849 246.45326   199 33.9272727272727
+#2 311.05263 247.56579   249             <NA>
+#3 282.63158  71.93421    83 28.9090909090909
