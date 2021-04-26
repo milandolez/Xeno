@@ -9,7 +9,6 @@
 #4         176    33.09091
 #5         159    32.25455
 #6         140    31.41818
-library(rgdal)
 
 
 library(raster)
