@@ -10,7 +10,6 @@
 #5         159    32.25455
 #6         140    31.41818
 
-
 library(raster)
 
 ir <- raster("IR_dorsal transparent.JPG")
@@ -46,8 +45,19 @@ temp_coord <- data.frame(x2,
                       y2,
                         scale)
 
-#translate color values to temperature using the key 
+#get raster coordinates and xeno yes/no for each coordinate 
+all_coords <- as.data.frame(coordinates(ir))
+all_coords$scale <- extract(ir, all_coords)
+just_fin <- na.omit(all_coords)
+#the na.omit() step will remove non-fin coordinates once the background is empty, ask for viv's help with this
+#may need to crop raster so that points below y=75 so that extra body space isn't counted as fin space?
+just_fin$x2tip <- (temp_coord$x2[260]-just_fin$x)
+just_fin$y2tip <- (temp_coord$y2[260]-just_fin$y)
+just_fin$vector2tip <- sqrt((just_fin$x2tip)^2 + (just_fin$y2tip)^2)
+#add in xeno yes/no (working on this)
 
+
+#translate color values to temperature using the key 
 #translate scale values that are one away from scale values in the key
 
 for (i in 1:nrow(temp_coord)) {
